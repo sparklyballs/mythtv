@@ -54,7 +54,7 @@ xrdp -y && \
 mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
 
 # create ubuntu user
-useradd --create-home --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
+useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,mythtv,video,audio,cdrom,dialout  ubuntu && \
 echo "ubuntu:PASSWD" | chpasswd && \
 
 # set user ubuntu to same uid and guid as nobody:users in unraid
