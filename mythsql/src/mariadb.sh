@@ -18,12 +18,15 @@ else
   start_mysql
   echo "Database created. Granting access to 'root' ruser for all hosts."
   mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION"
+  mysql -uroot -e "CREATE DATABASE IF NOT EXISTS mythconverg"
   mysql -uroot -e "CREATE USER 'mythtv' IDENTIFIED BY 'mythtv'"
-  mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'mythtv'@'%' WITH GRANT OPTION"
-  mysql -uroot -e "CREATE DATABASE mythconverg"
-  mysqladmin -u root shutdown
+  mysql -uroot -e "GRANT ALL ON mythconverg.* TO 'mythtv' IDENTIFIED BY 'mythtv'"
+  mysql -uroot -e "GRANT CREATE TEMPORARY TABLES ON mythconverg.* TO 'mythtv' IDENTIFIED BY 'mythtv'"
+  mysql -uroot -e "ALTER DATABASE mythconverg DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
+mysqladmin -u root shutdown
 fi
 
 echo "Starting MariaDB..."
-/usr/bin/supervisord -c /root/supervisor-files/supervisor-mysql.conf &
+/usr/bin/mysqld_safe --skip-syslog --datadir='/db'
+
 
