@@ -26,3 +26,4 @@ fi
 
 echo "Starting MariaDB..."
 /usr/bin/supervisord -c /root/supervisor-files/supervisor-mysql.conf &
+
