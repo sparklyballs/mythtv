@@ -20,9 +20,7 @@ else
   mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION"
   mysql -uroot -e "CREATE DATABASE IF NOT EXISTS mythconverg"
   mysql -uroot -e "CREATE USER 'mythtv' IDENTIFIED BY 'mythtv'"
-  mysql -uroot -e "GRANT ALL ON mythconverg.* TO 'mythtv' IDENTIFIED BY 'mythtv'"
-  mysql -uroot -e "GRANT CREATE TEMPORARY TABLES ON mythconverg.* TO 'mythtv' IDENTIFIED BY 'mythtv'"
-  mysql -uroot -e "ALTER DATABASE mythconverg DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
+  mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'mythtv'@'%' WITH GRANT OPTION"
 mysqladmin -u root shutdown
 fi
 
