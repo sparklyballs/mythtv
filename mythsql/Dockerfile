@@ -28,7 +28,7 @@ chmod +x /etc/service/mariadb/run && \
 apt-get update -q && \
 
 # Install Dependencies
-apt-get install -qy mariadb-server && \
+apt-get install -qy mysql-server && \
 
 # Tweak my.cnf
 sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf && \
