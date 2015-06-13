@@ -21,9 +21,10 @@ mv /root/002-bring-up-rdp.sh /etc/my_init.d/002-bring-up-rdp.sh && \
 chmod +x /etc/my_init.d/* && \
 
 # add repos
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 13551B881504888C && \
-echo "deb http://ppa.launchpad.net/mythbuntu/0.27/ubuntu trusty main" >> /etc/apt/sources.list && \
-echo "deb-src http://ppa.launchpad.net/mythbuntu/0.27/ubuntu trusty main" >> /etc/apt/sources.list && \
+echo "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
+echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 apt-add-repository ppa:ubuntu-mate-dev/ppa && \
 apt-add-repository ppa:ubuntu-mate-dev/trusty-mate && \
 
@@ -33,11 +34,12 @@ apt-get install supervisor -y && \
 
 # install mythtv 
 apt-get install \
-mythtv-backend \
-mythtv-database -y && \
+mythtv-backend -y && \
+
 
 # install misc dependencies and mate desktop
 mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
+apt-get update -qq && \
 apt-get install  --force-yes --no-install-recommends \
 wget \
 openjdk-7-jre \
