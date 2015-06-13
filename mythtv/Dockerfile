@@ -40,6 +40,10 @@ mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
 apt-get update -qq && \
 apt-get install supervisor -y && \ 
 
+# install pwgen
+apt-get install \
+pwgen -y && \
+
 # install mythtv 
 apt-get install \
 mythtv-backend -y && \
