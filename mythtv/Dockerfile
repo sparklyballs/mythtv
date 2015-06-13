@@ -15,9 +15,14 @@ ADD src/ /root/
 # Set the locale
 RUN locale-gen en_US.UTF-8 && \
 
+# Fix a Debianism of the nobody's uid being 65534
+usermod -u 99 nobody && \
+usermod -g 100 nobody && \
+
 # mv startup file(s) and make executable
 mv /root/001-fix-the-time.sh /etc/my_init.d/001-fix-the-time.sh && \
 mv /root/002-bring-up-rdp.sh /etc/my_init.d/002-bring-up-rdp.sh && \
+mv /root/003-bring-up-database.sh /etc/my_init.d/003-bring-up-database.sh && \
 chmod +x /etc/my_init.d/* && \
 
 # add repos
@@ -36,6 +41,9 @@ apt-get install supervisor -y && \
 apt-get install \
 mythtv-backend -y && \
 
+# set a password for root and add to group mythtv
+usermod -a -G mythtv root && \
+echo "root:root" | chpasswd && \
 
 # install misc dependencies and mate desktop
 mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
@@ -54,6 +62,15 @@ ttf-ubuntu-font-family -qy && \
 apt-get install \
 xrdp -y && \
 mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
+
+# install mariadb
+apt-get install \
+mariadb-server -y && \
+
+# Tweak my.cnf
+sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf && \
+sed -i -e 's#\(log_error.*=\).*#\1 /db/mysql_safe.log#g' /etc/mysql/my.cnf && \
+sed -i -e 's/\(user.*=\).*/\1 nobody/g' /etc/mysql/my.cnf && \
 
 # clean up
 apt-get clean && \
