@@ -26,7 +26,7 @@ else
 fi
 
 echo "Starting MariaDB..."
-
+/usr/bin/supervisord -c /root/supervisor-files/db-supervisord.conf & >/dev/null 2>&1
 
 
 
