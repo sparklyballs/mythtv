@@ -15,14 +15,6 @@ ADD src/ /root/
 # Set the locale
 RUN locale-gen en_US.UTF-8 && \
 
-# create mythtv user
-useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,video,audio,cdrom,dialout  mythtv && \
-echo "mythtv:mythtv" | chpasswd && \
-
-# set user ubuntu to same uid and guid as nobody:users in unraid
-usermod -u 99 mythtv && \
-usermod -g 100 mythtv && \
-
 # mv startup file(s) and make executable
 mv /root/001-fix-the-time.sh /etc/my_init.d/001-fix-the-time.sh && \
 mv /root/002-bring-up-rdp.sh /etc/my_init.d/002-bring-up-rdp.sh && \
