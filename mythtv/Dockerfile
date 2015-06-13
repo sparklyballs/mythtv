@@ -15,6 +15,14 @@ ADD src/ /root/
 # Set the locale
 RUN locale-gen en_US.UTF-8 && \
 
+# create mythtv user
+useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,video,audio,cdrom,dialout  mythtv && \
+echo "mythtv:mythtv" | chpasswd && \
+
+# set user ubuntu to same uid and guid as nobody:users in unraid
+usermod -u 99 mythtv && \
+usermod -g 100 mythtv && \
+
 # mv startup file(s) and make executable
 mv /root/001-fix-the-time.sh /etc/my_init.d/001-fix-the-time.sh && \
 mv /root/002-bring-up-rdp.sh /etc/my_init.d/002-bring-up-rdp.sh && \
@@ -52,14 +60,6 @@ ttf-ubuntu-font-family -qy && \
 apt-get install \
 xrdp -y && \
 mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
-
-# create ubuntu user
-useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,mythtv,video,audio,cdrom,dialout  ubuntu && \
-echo "ubuntu:PASSWD" | chpasswd && \
-
-# set user ubuntu to same uid and guid as nobody:users in unraid
-usermod -u 99 ubuntu && \
-usermod -g 100 ubuntu && \
 
 # clean up
 apt-get clean && \
