@@ -12,6 +12,9 @@ EXPOSE 3306 3389
 # Add local files
 ADD src/ /root/
 
+# volumes
+VOLUME /db
+
 # Set the locale
 RUN locale-gen en_US.UTF-8 && \
 
@@ -66,6 +69,7 @@ mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
 # install mariadb
 apt-get install \
 mariadb-server -y && \
+
 
 # Tweak my.cnf
 sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf && \
