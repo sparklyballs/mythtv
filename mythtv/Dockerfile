@@ -28,13 +28,14 @@ mv /root/002-bring-up-rdp.sh /etc/my_init.d/002-bring-up-rdp.sh && \
 mv /root/003-bring-up-database.sh /etc/my_init.d/003-bring-up-database.sh && \
 chmod +x /etc/my_init.d/* && \
 
-# add repos
+# add repos and excludes list
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 apt-add-repository ppa:ubuntu-mate-dev/ppa && \
 apt-add-repository ppa:ubuntu-mate-dev/trusty-mate && \
+mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
 
 # install supervisor
 apt-get update -qq && \
@@ -49,7 +50,6 @@ usermod -a -G mythtv root && \
 echo "root:root" | chpasswd && \
 
 # install misc dependencies and mate desktop
-mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
 apt-get update -qq && \
 apt-get install  --force-yes --no-install-recommends \
 wget \
