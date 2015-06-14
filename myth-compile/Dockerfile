@@ -28,14 +28,30 @@ echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/s
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 
+# Accept EULA for MS fonts
+echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections && \
+
 # set startup file
 mv /root/firstrun.sh /etc/my_init.d/firstrun.sh && \
 chmod +x /etc/my_init.d/firstrun.sh && \
 
-# install build dependencies
+# install packages and dependencies
 apt-get update -qqy && \
 apt-get install \
-git \
+ttf-liberation \
+libfontconfig1 \
+ttf-mscorefonts-installer \
+xrdp \
+wget \
+openjdk-7-jre \
+supervisor \
+sudo \
+nano \
+net-tools \
+x11vnc \
+xvfb \
+mate-desktop-environment-core \
+git-core \
 build-essential \
 yasm \
 make \
@@ -71,6 +87,7 @@ libssl-dev \
 libsdl1.2-dev \
 libfaac-dev \
 libfftw3-dev \
+libqtwebkit-dev \
 libjack-dev -y && \
 
 # install cpan packages
@@ -97,43 +114,28 @@ cd mythtv/mythtv && \
 make && \
 make install && \
 
-# clean build dependencies
-apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
-git \
-build-essential \
-yasm \
-make \
-gcc \
-g++ && \
-
-# install mate desktop and xrdp dependencies
-apt-get install \
-xrdp \
-wget \
-openjdk-7-jre \
-supervisor \
-sudo \
-nano \
-net-tools \
-x11vnc \
-xvfb \
-mate-desktop-environment-core -y && \
-
 # create ubuntu user
-useradd --create-home --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
+useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,audio,video,cdrom,dialout  ubuntu && \
 echo "ubuntu:PASSWD" | chpasswd && \
 
 # set user ubuntu to same uid and guid as nobody:users in unraid
 usermod -u 99 ubuntu && \
 usermod -g 100 ubuntu && \
 
-
 # swap in modified xrdp.ini
 mv /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.original && \
 mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
 chown root:root /etc/xrdp/xrdp.ini && \
 
-# clean up
+# clean build dependencies and tmp files etc....
+apt-get purge --remove \
+git \
+build-essential \
+yasm \
+make \
+gcc \
+g++ -y && \
+apt-get autoremove -y && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
