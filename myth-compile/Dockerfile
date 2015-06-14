@@ -22,14 +22,10 @@ RUN locale-gen en_US.UTF-8 && \
 mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
 apt-add-repository ppa:ubuntu-mate-dev/ppa && \
 apt-add-repository ppa:ubuntu-mate-dev/trusty-mate && \
-add-apt-repository ppa:kirillshkrogalev/ffmpeg-next && \
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
-
-# Accept EULA for MS fonts
-echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections && \
 
 # set startup file
 mv /root/firstrun.sh /etc/my_init.d/firstrun.sh && \
@@ -52,18 +48,29 @@ mate-desktop-environment-core -y && \
 apt-get install \
 xrdp -y && \
 
+# create ubuntu user
+useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,audio,video,cdrom,dialout,fuse  ubuntu && \
+echo "ubuntu:PASSWD" | chpasswd && \
+
+# set user ubuntu to same uid and guid as nobody:users in unraid
+usermod -u 99 ubuntu && \
+usermod -g 100 ubuntu && \
+
+# swap in modified xrdp.ini
+mv /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.original && \
+mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
+chown root:root /etc/xrdp/xrdp.ini && \
+
 # install mythtv build dependencies 
 apt-get install \
 ttf-liberation \
 libfontconfig1 \
-ttf-mscorefonts-installer \
-git-core \
+git \
 build-essential \
 yasm \
 make \
 gcc \
 g++ \
-ffmpeg \
 lame \
 libmp3lame0 \
 qt4-dev-tools \
@@ -120,19 +127,6 @@ cd mythtv/mythtv && \
 make && \
 make install && \
 
-# create ubuntu user
-useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,audio,video,cdrom,dialout  ubuntu && \
-echo "ubuntu:PASSWD" | chpasswd && \
-
-# set user ubuntu to same uid and guid as nobody:users in unraid
-usermod -u 99 ubuntu && \
-usermod -g 100 ubuntu && \
-
-# swap in modified xrdp.ini
-mv /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.original && \
-mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
-chown root:root /etc/xrdp/xrdp.ini && \
-
 # clean build dependencies and tmp files etc....
 apt-get purge --remove \
 git \
@@ -143,5 +137,5 @@ gcc \
 g++ -y && \
 apt-get autoremove -y && \
 apt-get clean && \
-rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
