@@ -41,7 +41,6 @@ apt-get install \
 ttf-liberation \
 libfontconfig1 \
 ttf-mscorefonts-installer \
-xrdp \
 wget \
 openjdk-7-jre \
 supervisor \
@@ -92,6 +91,10 @@ libjack-dev -y && \
 
 # install cpan packages
 cpanm HTTP::Request LWP::UserAgent IO::Socket::INET6 && \
+
+# install xrdp 
+apt-get install \
+xrdp -y && \
 
 # fetch source from git
 cd /tmp && \
