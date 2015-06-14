@@ -37,10 +37,7 @@ chmod +x /etc/my_init.d/firstrun.sh && \
 
 # install packages and dependencies
 apt-get update -qqy && \
-apt-get install \
-ttf-liberation \
-libfontconfig1 \
-ttf-mscorefonts-installer \
+apt-get install --force-yes --no-install-recommends \
 wget \
 openjdk-7-jre \
 supervisor \
@@ -49,7 +46,17 @@ nano \
 net-tools \
 x11vnc \
 xvfb \
-mate-desktop-environment-core \
+mate-desktop-environment-core -y && \
+
+# install xrdp 
+apt-get install \
+xrdp -y && \
+
+# install mythtv build dependencies 
+apt-get install \
+ttf-liberation \
+libfontconfig1 \
+ttf-mscorefonts-installer \
 git-core \
 build-essential \
 yasm \
@@ -91,10 +98,6 @@ libjack-dev -y && \
 
 # install cpan packages
 cpanm HTTP::Request LWP::UserAgent IO::Socket::INET6 && \
-
-# install xrdp 
-apt-get install \
-xrdp -y && \
 
 # fetch source from git
 cd /tmp && \
