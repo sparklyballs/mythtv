@@ -49,7 +49,7 @@ apt-get install \
 xrdp -y && \
 
 # create ubuntu user
-useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,audio,video,cdrom,dialout,fuse  ubuntu && \
+useradd --create-home --shell /bin/bash --user-group --groups adm,sudo,audio,video,cdrom,dialout  ubuntu && \
 echo "ubuntu:PASSWD" | chpasswd && \
 
 # set user ubuntu to same uid and guid as nobody:users in unraid
