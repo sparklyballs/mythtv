@@ -5,9 +5,19 @@ if [[ $(cat /etc/timezone) != $TZ ]] ; then
   dpkg-reconfigure -f noninteractive tzdata
 fi
 
-mkdir -p /var/run/sshd
-mkdir -p /root/.vnc
-/usr/bin/supervisord -c /root/supervisord.conf &
+mkdir -p /home/ubuntu/unraid
+
+if [ -d "/home/ubuntu/unraid/wallpapers" ]; then
+echo "using existing wallpapers etc..."
+else
+mkdir -p /home/ubuntu/unraid/wallpapers
+cp /root/wallpapers/* /home/ubuntu/unraid/wallpapers/
+fi
+
+
+mkdir  /var/run/sshd
+mkdir  /root/.vnc
+/usr/bin/supervisord -c /root/supervisord.conf
 while [ 1 ]; do
 /bin/bash
 done
