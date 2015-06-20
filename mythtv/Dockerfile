@@ -35,27 +35,17 @@ echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/a
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
 apt-add-repository ppa:ubuntu-mate-dev/ppa && \
 apt-add-repository ppa:ubuntu-mate-dev/trusty-mate && \
+sh -c 'echo "deb http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu trusty main" >> /etc/apt/sources.list.d/mariadb.list' && \
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBCB082A1BB943DB && \
 mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
 
-# install supervisor
+# install dependencies
 apt-get update -qq && \
-apt-get install supervisor -y && \ 
-
-# install pwgen
 apt-get install \
-pwgen -y && \
-
-# install mythtv 
-apt-get install \
-mythtv-backend -y && \
-
-# set a password for root and add to group mythtv
-usermod -a -G mythtv root && \
-echo "root:root" | chpasswd && \
-
-# install misc dependencies and mate desktop
-apt-get update -qq && \
-apt-get install  --force-yes --no-install-recommends \
+mariadb-server \
+supervisor \
+pwgen \
+mythtv-backend \
 wget \
 openjdk-7-jre \
 sudo \
@@ -70,9 +60,9 @@ apt-get install \
 xrdp -y && \
 mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
 
-# install mariadb
-apt-get install \
-mariadb-server -y && \
+# set a password for root and add to group mythtv
+usermod -a -G mythtv root && \
+echo "root:root" | chpasswd && \
 
 # Tweak my.cnf
 sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf && \
