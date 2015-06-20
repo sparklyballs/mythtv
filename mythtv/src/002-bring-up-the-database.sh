@@ -34,4 +34,4 @@ mysql -uroot -e "CREATE DATABASE IF NOT EXISTS mythconverg"
 fi
 
 echo "Starting MariaDB..."
-/usr/bin/mysqld_safe --skip-syslog --timezone=$TZ --datadir='/db'
+/usr/bin/supervisord -c /root/supervisor-files/db-supervisord.conf &
