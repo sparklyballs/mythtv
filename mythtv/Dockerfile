@@ -6,8 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive HOME="/root" TERM=xterm LANG=en_US.UTF-8 LANG
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
 
-# Expose port
-EXPOSE 3389 6543 6544
+# Expose ports
+EXPOSE 3306 3389 5002/udp 5004/udp 6543 6544 65001 65001/udp 
 
 # Add local files
 ADD src/ /root/
