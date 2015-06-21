@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive HOME="/root" TERM=xterm LANG=en_US.UTF-8 LANG
 CMD ["/sbin/my_init"]
 
 # Expose ports
-EXPOSE 3306 3389 5002/udp 5004/udp 6543 6544 65001 65001/udp 
+EXPOSE 3306 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp 
 
 # Add local files
 ADD src/ /root/
