@@ -15,8 +15,11 @@ ADD src/ /root/
 # volumes
 VOLUME /db
 
+# chfn workaround - Known issue within Dockers
+RUN ln -s -f /bin/true /usr/bin/chfn && \
+
 # Set the locale
-RUN locale-gen en_US.UTF-8 && \
+locale-gen en_US.UTF-8 && \
 
 # Fix a Debianism of the nobody's uid being 65534
 usermod -u 99 nobody && \
