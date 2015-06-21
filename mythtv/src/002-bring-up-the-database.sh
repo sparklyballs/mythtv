@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# set timezone
-if [[ $(cat /etc/timezone) != $TZ ]] ; then
-echo "$TZ" > /etc/timezone
-dpkg-reconfigure -f noninteractive tzdata
-fi
-
 start_mysql(){
     /usr/bin/mysqld_safe --datadir=/db > /dev/null 2>&1 &
     RET=1

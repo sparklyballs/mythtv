@@ -39,13 +39,9 @@ sh -c 'echo "deb http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu trusty main" 
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBCB082A1BB943DB && \
 
 
-# install dependencies
+# install mate and dependencies
 apt-get update -qq && \
-apt-get install \
-mariadb-server \
-supervisor \
-pwgen \
-mythtv-backend \
+apt-get install -qy --force-yes --no-install-recommends \
 wget \
 openjdk-7-jre \
 sudo \
@@ -53,12 +49,19 @@ mate-desktop-environment-core \
 x11vnc \
 xvfb \
 gtk2-engines-murrine \
-ttf-ubuntu-font-family -qy && \
+ttf-ubuntu-font-family \
+supervisor && \
 
 # install xrdp
 apt-get install \
 xrdp -y && \
 mv /root/xrdp.ini /etc/xrdp/xrdp.ini && \
+
+# install mythtv-backend and mariadb-server
+apt-get install \
+mariadb-server \
+pwgen \
+mythtv-backend -y && \
 
 # set a password for root and add to group mythtv
 usermod -a -G mythtv root && \
