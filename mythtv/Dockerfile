@@ -28,7 +28,7 @@ mv /root/002-bring-up-the-database.sh /etc/my_init.d/002-bring-up-the-database.s
 mv /root/003-bring-up-rdp.sh /etc/my_init.d/003-bring-up-rdp.sh && \
 chmod +x /etc/my_init.d/* && \
 
-# add repos and excludes list
+# add repos
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
 echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty multiverse" >> /etc/apt/sources.list && \
 echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse" >> /etc/apt/sources.list && \
@@ -37,7 +37,7 @@ apt-add-repository ppa:ubuntu-mate-dev/ppa && \
 apt-add-repository ppa:ubuntu-mate-dev/trusty-mate && \
 sh -c 'echo "deb http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu trusty main" >> /etc/apt/sources.list.d/mariadb.list' && \
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBCB082A1BB943DB && \
-mv /root/excludes /etc/dpkg/dpkg.cfg.d/excludes && \
+
 
 # install dependencies
 apt-get update -qq && \
