@@ -25,6 +25,16 @@ mysql -uroot -e "CREATE DATABASE IF NOT EXISTS mythconverg"
   mysql -uroot -e "GRANT CREATE TEMPORARY TABLES ON mythconverg.* TO 'mythtv' IDENTIFIED BY 'mythtv'"
   mysql -uroot -e "ALTER DATABASE mythconverg DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
   mysqladmin -u root shutdown
+echo "Starting MariaDB..."
+/usr/bin/supervisord -c /root/supervisor-files/db-supervisord.conf &
+# test database is running before issuing timzone command
+echo "Testing whether database is ready"
+until [ "$( mysqladmin -u root status 2>&1 >/dev/null | grep -ci error:)" = "0" ]
+do
+echo "waiting....."
+sleep 2s
+done
+exec mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 fi
 
 echo "Starting MariaDB..."
