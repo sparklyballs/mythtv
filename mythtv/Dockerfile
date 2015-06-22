@@ -1,7 +1,9 @@
 FROM phusion/baseimage:0.9.16
 
 # Set correct environment variables
-ENV DEBIAN_FRONTEND=noninteractive HOME="/root" TERM=xterm LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive HOME="/root" TERM=xterm LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 APACHE_RUN_USER=www-data APACHE_RUN_GROUP=www-data APACHE_LOG_DIR="/var/log/apache2" APACHE_LOCK_DIR="/var/lock/apache2" APACHE_PID_FILE="/var/run/apache2.pid"
+CMD ["/sbin/my_init"]
+
 
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
@@ -67,6 +69,27 @@ pwgen \
 mythtv-backend -y && \
 mv /root/config.xml /root/.mythtv/config.xml && \
 
+# install mythweb dependencies
+apt-get install \
+git-core \
+apache2 \
+php5 \
+libhttp-date-perl \
+php-mythtv \ 
+php5-mysql \
+libmath-round-perl -y && \
+
+# fetch mythweb from git to temp location
+cd /root && \
+git clone https://github.com/MythTV/mythweb.git && \
+
+# Enable apache mods.
+a2enmod php5 && \
+a2enmod rewrite && \
+# Update the PHP.ini file, enable <? ?> tags and quieten logging.
+sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php5/apache2/php.ini && \
+sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php5/apache2/php.ini && \
+
 # set a password for root and add to group mythtv
 usermod -a -G mythtv root && \
 echo "root:root" | chpasswd && \
@@ -77,4 +100,8 @@ sed -i -e 's/\(user.*=\).*/\1 root/g' /etc/mysql/my.cnf && \
 
 # clean up
 apt-get clean && \
-rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+/usr/share/man /usr/share/groff /usr/share/info \
+/usr/share/lintian /usr/share/linda /var/cache/man && \
+(( find /usr/share/doc -depth -type f ! -name copyright|xargs rm || true )) && \
+(( find /usr/share/doc -empty|xargs rmdir || true ))
