@@ -7,13 +7,13 @@ ENV DEBIAN_FRONTEND=noninteractive HOME="/root" TERM=xterm LANG=en_US.UTF-8 LANG
 CMD ["/sbin/my_init"]
 
 # Expose ports
-EXPOSE 3306 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp 
+EXPOSE 3310 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp 
 
 # Add local files
 ADD src/ /root/
 
 # volumes
-VOLUME /db
+VOLUME /db /root/.mythtv
 
 # chfn workaround - Known issue within Dockers
 RUN ln -s -f /bin/true /usr/bin/chfn && \
@@ -65,14 +65,14 @@ apt-get install \
 mariadb-server \
 pwgen \
 mythtv-backend -y && \
+mv /root/config.xml /root/.mythtv/config.xml && \
 
 # set a password for root and add to group mythtv
 usermod -a -G mythtv root && \
 echo "root:root" | chpasswd && \
 
 # Tweak my.cnf
-sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf && \
-sed -i -e 's#\(log_error.*=\).*#\1 /db/mysql_safe.log#g' /etc/mysql/my.cnf && \
+mv /root/my.cnf /etc/mysql/my.cnf && \
 sed -i -e 's/\(user.*=\).*/\1 root/g' /etc/mysql/my.cnf && \
 
 # clean up
