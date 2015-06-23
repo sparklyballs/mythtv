@@ -9,7 +9,7 @@ CMD ["/sbin/my_init"]
 CMD ["/sbin/my_init"]
 
 # Expose ports
-EXPOSE 80 3306 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp 
+EXPOSE 3310 3389 5000/udp 5002/udp 5004/udp 6543 6544 6760 65001 65001/udp 
 
 # Add local files
 ADD src/ /root/
