@@ -9,7 +9,7 @@ CMD ["/sbin/my_init"]
 CMD ["/sbin/my_init"]
 
 # Expose ports
-EXPOSE 3310 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp 
+EXPOSE 80 3306 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp 
 
 # Add local files
 ADD src/ /root/
@@ -31,6 +31,7 @@ usermod -g 100 nobody && \
 mv /root/001-fix-the-time.sh /etc/my_init.d/001-fix-the-time.sh && \
 mv /root/002-bring-up-the-database.sh /etc/my_init.d/002-bring-up-the-database.sh && \
 mv /root/003-bring-up-rdp.sh /etc/my_init.d/003-bring-up-rdp.sh && \
+mv /root/004-bring-up-mythweb.sh /etc/my_init.d/004-bring-up-mythweb.sh && \
 chmod +x /etc/my_init.d/* && \
 
 # add repos
@@ -67,28 +68,15 @@ apt-get install \
 mariadb-server \
 pwgen \
 mythtv-backend -y && \
-mv /root/config.xml /root/.mythtv/config.xml && \
 
-# install mythweb dependencies
+# install mythweb
 apt-get install \
-git-core \
-apache2 \
-php5 \
-libhttp-date-perl \
-php-mythtv \ 
-php5-mysql \
-libmath-round-perl -y && \
+mythweb -y && \
 
-# fetch mythweb from git to temp location
-cd /root && \
-git clone https://github.com/MythTV/mythweb.git && \
-
-# Enable apache mods.
-a2enmod php5 && \
-a2enmod rewrite && \
-# Update the PHP.ini file, enable <? ?> tags and quieten logging.
+# Configure apache
 sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php5/apache2/php.ini && \
 sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php5/apache2/php.ini && \
+mv /root/mythweb.conf /etc/apache2/sites-available/mythweb.conf  && \
 
 # set a password for root and add to group mythtv
 usermod -a -G mythtv root && \
