@@ -15,7 +15,7 @@ EXPOSE 80 3306 3389 5000/udp 5002/udp 5004/udp 6543 6544 65001 65001/udp
 ADD src/ /root/
 
 # volumes
-VOLUME /db /root/.mythtv
+VOLUME /db /root/.mythtv /var/lib/mythtv
 
 # chfn workaround - Known issue within Dockers
 RUN ln -s -f /bin/true /usr/bin/chfn && \
